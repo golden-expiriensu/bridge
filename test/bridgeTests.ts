@@ -120,8 +120,8 @@ describe("Bridge tests", function () {
 
             await bridgeBsc.init(addr[9].address);
 
-            let msgOrNull = env.web3.utils.soliditySha3(100, 0, addr[5].address, bscChainId, bscChainId, tokenSymbol);
-            message = msgOrNull ? msgOrNull : "";
+            let msgOrNull = env.web3.utils.soliditySha3(100, 0, addr[5].address, bscChainId, bscChainId, tokenSymbol);  //let msgOrNull = env.web3.utils.soliditySha3(100, 0, addr[5].address, bscChainId, ethChainId, tokenSymbol);
+            message = msgOrNull ? msgOrNull : "";           // зачем это?
             signature = await env.web3.eth.sign(message, addr[9].address);
             splitedSignatire = ethers.utils.splitSignature(signature);
 
@@ -129,7 +129,7 @@ describe("Bridge tests", function () {
                 100,
                 0,
                 addr[5].address,
-                bscChainId,
+                bscChainId,     //ethChainID
                 tokenSymbol,
                 splitedSignatire.v,
                 splitedSignatire.r,
