@@ -15,7 +15,7 @@ describe("Token tests", function () {
         tokenFactory = await ethers.getContractFactory("BridgeToken");
         token = await tokenFactory.deploy(parseEther("10"));
         addr = await ethers.getSigners();
-    })
+    });
 
     describe("1) Main functions", function () {
 

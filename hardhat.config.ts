@@ -6,6 +6,8 @@ import '@nomiclabs/hardhat-waffle';
 import "@nomiclabs/hardhat-ethers";
 import "./tasks"
 
+require("@nomiclabs/hardhat-truffle5");
+
 const chainIds = {
   ganache: 1337,
   goerli: 5,
