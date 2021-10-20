@@ -13,7 +13,7 @@ describe("Token tests", function () {
     beforeEach(async function () {
 
         tokenFactory = await ethers.getContractFactory("BridgeToken");
-        token = await tokenFactory.deploy(parseEther("10"));
+        token = await tokenFactory.deploy(parseEther("100"));
         addr = await ethers.getSigners();
     });
 
@@ -21,9 +21,9 @@ describe("Token tests", function () {
 
         it("Should transfer 10 tokens from addr1 to addr2 and show balance of addr1 and addr2", async function () {
 
-            await token.transfer(addr[1].address, parseEther("4"));
-            expect(await token.balanceOf(addr[0].address)).to.equal(parseEther("6"));
-            expect(await token.balanceOf(addr[1].address)).to.equal(parseEther("4"));
+            await token.transfer(addr[1].address, parseEther("10"));
+            expect(await token.balanceOf(addr[0].address)).to.equal(parseEther("90"));
+            expect(await token.balanceOf(addr[1].address)).to.equal(parseEther("10"));
         })
     })
 
@@ -46,16 +46,16 @@ describe("Token tests", function () {
         it("c) Should add minter role to addr[5]", async function () {
 
             await token.grantRole(await token.MINTER_ROLE(), addr[5].address);
-            await token.connect(addr[5]).mint(addr[5].address, parseEther("1"))
-            expect(await token.balanceOf(addr[5].address)).to.equal(parseEther("1"));            
+            await token.connect(addr[5]).mint(addr[5].address, parseEther("17"))
+            expect(await token.balanceOf(addr[5].address)).to.equal(parseEther("17"));            
         })
 
         it("d) Should add burner role to addr[5]", async function () {
 
-            await token.transfer(addr[5].address, parseEther("3"));
+            await token.transfer(addr[5].address, parseEther("32"));
             await token.grantRole(await token.BURNER_ROLE(), addr[5].address);
-            await token.connect(addr[5]).burn(addr[5].address, parseEther("1"))
-            expect(await token.balanceOf(addr[5].address)).to.equal(parseEther("2"));            
+            await token.connect(addr[5]).burn(addr[5].address, parseEther("12"))
+            expect(await token.balanceOf(addr[5].address)).to.equal(parseEther("20"));            
         })
     })
 })

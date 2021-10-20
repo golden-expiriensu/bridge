@@ -100,16 +100,19 @@ describe("Bridge tests", function () {
 
         it("a) Should burn 100 tokens from address after swap", async function () {
 
+            expect(await tokenEth.balanceOf(addr[5].address)).to.be.equal(parseEther("500"));
+            
             await bridgeEth.addChain(bscChainId);
             await bridgeEth.addToken(tokenSymbol, tokenEth.address);
-            expect(await tokenEth.balanceOf(addr[5].address)).to.be.equal(parseEther("500"));
-            await bridgeEth.swap(
-                100,
+
+            await bridgeEth.connect(addr[5]).swap(
+                parseEther("100"),
                 0,
                 addr[5].address,
                 bscChainId,
                 tokenSymbol
             );
+
             expect(await tokenEth.balanceOf(addr[5].address)).to.be.equal(parseEther("400"));
         })
     })
@@ -118,23 +121,29 @@ describe("Bridge tests", function () {
 
         it("a) Redeem should mint 100 tokens", async function () {
 
+            expect(await tokenEth.balanceOf(addr[5].address)).to.be.equal(parseEther("500"));
+            
             await bridgeBsc.init(addr[9].address);
+            await bridgeBsc.addToken(tokenSymbol, tokenBsc.address);
 
-            let msgOrNull = env.web3.utils.soliditySha3(100, 0, addr[5].address, bscChainId, bscChainId, tokenSymbol);
+            let msgOrNull = env.web3.utils.soliditySha3(10**20, 0, addr[5].address, ethChainId, bscChainId, tokenSymbol);
             message = msgOrNull ? msgOrNull : "";
             signature = await env.web3.eth.sign(message, addr[9].address);
             splitedSignatire = ethers.utils.splitSignature(signature);
 
             await bridgeBsc.redeem(
-                100,
+                parseEther("100"),
                 0,
                 addr[5].address,
+                ethChainId,
                 bscChainId,
                 tokenSymbol,
                 splitedSignatire.v,
                 splitedSignatire.r,
                 splitedSignatire.s
             );
+
+            expect(await tokenBsc.balanceOf(addr[5].address)).to.be.equal(parseEther("600"));
         });
     })
 })

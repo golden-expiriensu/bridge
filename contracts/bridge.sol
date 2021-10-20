@@ -72,6 +72,7 @@ contract Bridge is AccessControl {
         uint256 _amount,
         uint256 _nonce,
         address _recepient,
+        uint256 _chainFrom,
         uint256 _chainTo,
         string memory _symbol,
         uint8 _v,
@@ -81,17 +82,17 @@ contract Bridge is AccessControl {
         require(_chainTo == chainId, "redeem: chainId and chainTo are not the same");
 
         bytes32 hashedMessage = keccak256(
-            abi.encodePacked(_amount, _nonce, _recepient, chainId, _chainTo, _symbol)
+            abi.encodePacked(_amount, _nonce, _recepient, _chainFrom, _chainTo, _symbol)
         );
 
         address recoveredAddress = ecrecover(addPrefix(hashedMessage), _v, _r, _s);
         require(recoveredAddress == validator, "redeem: recovered address does not match the validator address");
-
+        
         BridgeToken(tokenBySymbol[_symbol]).mint(_recepient, _amount);
     }
 
     function addPrefix(bytes32 _message) internal pure returns (bytes32) {
-        bytes32 prefix = "\x19Ethereum Signed Message:\n32";
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         return keccak256(abi.encodePacked(prefix, _message));
     }
 }
